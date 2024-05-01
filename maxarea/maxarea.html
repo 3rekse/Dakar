@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <!--un elemento HTML utilizzato per controllare le impostazioni 
+            della viewport su dispositivi mobili.
+- `name="viewport"`: è l'area visibile del browser.
+- `content="width=device-width"`: Layout si adatta alla larghezza del dispositivo.
+- `initial-scale=1.0`: Zoom iniziale quando la pagina viene caricata. 
+   Il valore `1.0` no zoom,  larghezza della pagina =  larghezza del dispositivo.
+Impostazioni aiutano a garantire che il tuo sito web sia visualizzato correttamente 
+su tutti i tipi di dispositivi, indipendentemente dalle dimensioni dello schermo.-->
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Maximum Area</title>
+        <link rel="stylesheet" href="style.css">
+    </head>
+    <body>
+        <div id="controls">
+            <canvas id="chart" width="402" height="424"></canvas>
+<!--Il tag `<button>`  elemento pulsante interattivo.
+- `onclick="doFlip()"`:  funzione eseguita quando l'utente fa clic sul pulsante.
+- `onmouseenter="doFlipOver()"`: eseguita quando il mouse entra nell'area del pulsante.
+- `onmouseout="doOut()"`: eseguita quando il mouse esce dall'area del pulsante.
+- `disabled=""`:  pulsante è disabilitato, l'utente non può interagire con esso.
+- `FLP`: testo visualizzato sul pulsante.-->
+            <button onclick="doFlip()" onmouseenter="doFlipOver()" onmouseout="doOut()" id="flipBtn" disabled="">FLP</button>
+            <button onclick="doMirror()" onmouseenter="doHalfOver()" onmouseout="doOut()" id="halfBtn" disabled="">MIR</button>
+            <button onclick="doScissords()" onmouseenter="doScissorsOver()" onmouseout="doOut()" id="scissorsBtn" disabled="">ORT</button>
+            <label for="ballNum">Segment: </label>
+            <input type="range" id="ballNum" min="4" max="200" value="50"><div id="areaDiv">
+
+            </div>
+        </div>
+        <canvas id="canvas" width="961" height="558"></canvas>
+        <script defer="" src="script.js"></script>
+        <!-- defer è presente e quindi attivo. Lo script viene caricato in parallelo
+            con il documento HTML, ma viene eseguito solo dopo che l'HTML 
+            è stato completamente caricato. -->
+
+    </body>
+</html>

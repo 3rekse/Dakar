@@ -1,0 +1,216 @@
+<canvas id="myCanvas"
+    width="500px" height="500px"
+    style="background-color:rgb(5, 5, 5)">
+</canvas>
+
+<style>
+    body{
+        margin:0;
+        overflow:hidden;
+    }
+</style>
+
+<script>
+
+// Ottieni il contesto di disegno del canvas
+const ctx=myCanvas.getContext("2d");
+
+// Definisci un offset per centrare il sistema di coordinate
+const offset={
+    x:myCanvas.width/2,
+    y:myCanvas.height/2
+};
+
+// Definisci un punto e un vettore G
+const point={x:0,y:100};
+const G={x:100,y:0};
+
+// Trasla il sistema di coordinate al centro del canvas
+ctx.translate(offset.x,offset.y);
+
+// Aggiorna il disegno
+update();
+
+// Aggiorna il punto con la posizione del mouse
+document.onmousemove=(event)=>{
+    point.x=event.x-offset.x;
+    point.y=event.y-offset.y;
+
+    update();
+}
+
+// Funzione per aggiornare il disegno
+function update(){
+    // Pulisci il canvas
+    ctx.clearRect(-offset.x,-offset.y,
+        myCanvas.width,myCanvas.height);
+
+    // Disegna il sistema di coordinate
+    drawCoordinateSystem();
+
+    // Calcola le coordinate polari del punto
+    const {mag,dir}=toPolar(point);
+    const same=toXY({mag,dir});
+
+    // Calcola la somma del punto e G
+    const resultAdd=add(point,G);
+    ctx.beginPath();
+    drawText(
+        "P("+point.x+","+-point.y+")",
+        {x:-offset.x/2,y:offset.y*0.8},
+        "white");
+    ctx.setLineDash([3,3]);
+    ctx.moveTo(G.x,G.y);
+    ctx.lineTo(resultAdd.x,resultAdd.y);
+    ctx.lineTo(point.x,point.y);
+    ctx.stroke();
+    ctx.setLineDash([]);
+    drawArrow({x:0,y:0},resultAdd,"red");
+
+    // Calcola la differenza tra il punto e G
+    const resultSub=subtract(point,G);
+    drawArrow({x:0,y:0},resultSub,"red");
+    drawArrow(G,point,"red");
+
+    // Normalizza e scala il risultato della sottrazione
+    const scaledSub=scale(
+        normalize(resultSub),50);
+    drawArrow({x:0,y:0},scaledSub,"red");
+
+    // Calcola il prodotto scalare tra G e il punto normalizzati
+    console.log(Math.acos(dot(normalize(G),
+        normalize(point))));
+
+    // Disegna le frecce per il punto e G
+    drawArrow({x:0,y:0},point);
+    drawArrow({x:0,y:0},G);
+}
+
+// Funzione per disegnare una freccia
+function drawArrow(tail,tip,color="white",size=20){
+    // Calcola le coordinate polari della freccia
+    const {dir,mag}=toPolar(subtract(tip,tail));
+    const v1={dir:dir+Math.PI*0.8,mag:size/2};
+    const p1=toXY(v1);
+    const t1=add(p1,tip);
+    const v2={dir:dir-Math.PI*0.8,mag:size/2};
+    const p2=toXY(v2);
+    const t2=add(p2,tip);
+    ctx.beginPath();
+    ctx.moveTo(tail.x,tail.y);
+    ctx.lineTo(tip.x,tip.y);
+    ctx.strokeStyle=color;
+    ctx.stroke();
+    ctx.beginPath();
+    ctx.moveTo(tip.x,tip.y);
+    ctx.lineTo(t1.x,t1.y);
+    ctx.lineTo(t2.x,t2.y);
+    ctx.closePath();
+    ctx.stroke();
+    ctx.fillStyle=color;
+    ctx.fill();
+}
+
+// Funzione per calcolare il prodotto scalare tra due punti
+function dot(p1,p2){
+    return p1.x*p2.x+p1.y*p2.y;
+}
+
+// Funzione per normalizzare un punto
+function normalize(p){
+    return scale(p,1/magnitude(p));
+}
+
+// Funzione per scalare un punto
+function scale(p,scalar){
+    return{
+        x:p.x*scalar,
+        y:p.y*scalar
+    };
+}
+
+// Funzione per sommare due punti
+function add(p1,p2){
+    return{
+        x:p1.x+p2.x,
+        y:p1.y+p2.y
+    };
+}
+
+// Funzione per sottrarre due punti
+function subtract(p1,p2){
+    return{
+        x:p1.x-p2.x,
+        y:p1.y-p2.y
+    };
+}
+
+// Funzione per convertire da coordinate polari a cartesiane
+function toXY({mag,dir}){
+    return {
+        x:Math.cos(dir)*mag,
+        y:Math.sin(dir)*mag
+    };
+}
+
+// Funzione per convertire da coordinate cartesiane a polari
+function toPolar({x,y}){
+    return {
+        dir:direction({x,y}),
+        mag:magnitude({x,y})
+    };
+}
+
+// Funzione per calcolare la direzione di un punto
+function direction({x,y}){
+    return Math.atan2(y,x);
+}
+
+// Funzione per calcolare la magnitudine di un punto
+function magnitude({x,y}){
+    return Math.hypot(x,y);
+}
+
+// Funzione per disegnare un punto
+function drawPoint(loc,size=10,color="white"){
+    ctx.beginPath();
+    ctx.fillStyle=color;
+    ctx.arc(loc.x,loc.y,size/2,0,Math.PI*2);
+    ctx.fill(); 
+}
+
+// Funzione per disegnare il sistema di coordinate
+function drawCoordinateSystem(){
+    ctx.beginPath();
+    ctx.moveTo(-offset.x,0);
+    ctx.lineTo(myCanvas.width-offset.x,0);
+    ctx.moveTo(0,-offset.y);
+    ctx.lineTo(0,myCanvas.height-offset.y);
+    ctx.setLineDash([5,4]);
+    ctx.lineWidth=2;
+    ctx.strokeStyle="#353535";
+    ctx.stroke();
+    ctx.setLineDash([]);
+}
+// Funzione per disegnare testo sul canvas
+function drawText(text,loc,color="black"){
+    ctx.beginPath();
+    ctx.fillStyle=color;
+    ctx.textAlign="center";
+    ctx.textBaseline="middle";
+    ctx.font="bold 18px Courier";
+    ctx.strokeStyle=color //ctx.lineWidth=7;
+    ctx.strokeText(text,loc.x,loc.y);
+  //  ctx.fillText(text,loc.x,loc.y);
+}
+
+// Funzione per disegnare un punto sul grafico
+function drawPoint(loc,size=2,color="black"){
+    chartCtx.beginPath();
+    chartCtx.fillStyle=color;
+    chartCtx.arc(loc.x,loc.y,size/2,0,Math.PI*2);
+    chartCtx.fill();
+}
+
+
+</script>

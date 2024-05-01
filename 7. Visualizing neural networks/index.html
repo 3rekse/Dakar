@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="it">
+    <title>OsKar </title>
+    <link rel="stylesheet" href="style.css">
+   
+    <script type="module" >
+        import { save, discard } from './main.js';
+        window.save = save; // rende la funzione disponibile globalmente
+        window.discard = discard; // rende la funzione disponibile globalmente
+
+   </script>
+</head>
+<body>
+    <h1><button onclick="save()">💾</button>
+        <button onclick="discard()">🗑️</button>DaKAR a OsKar Omarillo Self-driving car</h1>
+
+    <canvas id="myCanvas"></canvas>
+    <canvas id="networkCanvas"></canvas>
+    <script type="module" src="main.js"></script>
+</body>
+</html>

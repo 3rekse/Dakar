@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<head>
+    <title> Draw the Portal </title>
+<style>
+body{
+	padding:0px;
+	margin:0px;
+	background: linear-gradient(0deg, rgba(0,0,0,1) 0%, rgba(0,151,255,1) 100%);
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+}
+canvas{
+	background:white;
+	position:absolute;
+	top:50%;
+	left:50%;
+	transform:translate(-50%,-50%);
+	width:80vmin;
+	height:80vmin;
+}
+#overlay{ 
+	background:rgba(0,0,0,0.7);
+	position:absolute;
+	top:50%;
+	left:50%;
+	transform:translate(-50%,-50%);
+	width:70vmin;
+	height:70vmin;
+	
+	padding:1vmin;
+	margin:0px;
+	color: white;
+	border-radius:2vmin;
+	
+	font-size:3.3vmin;
+}
+
+a{
+	color:white;
+}
+</style>
+</head>
+<body>
+		<canvas id="myCanvas" onclick="nextEffect()"></canvas>
+		<pre id="overlay" onclick="removeOverlay()">
+<b>Webcam Effects on the HTML Canvas</b>
+
+We learned:
+- How to access the camera stream
+  * Promises but
+  * Async / await seems also possible
+- How to handle errors
+- How to crop the image to a square
+- How to scale the image to the canvas
+- How to manipulate the pixels
+  * Grayscale
+  * Invert
+  * Symmetry
+  * Mirror
+  * Average (?) Symmetry
+  * Stacking (Invert + Symmetry)
+  
+<font color="orange">Full course <a target="_blank" href="https://www.youtube.com/playlist?list=PLB0Tybl0UNfb3hTHPfEIg1SPw_-Ca9iIw">here</a> on YouTube (ongoing).</font>
+
+		</pre>
+		<script defer src="camerajs.js">
+	</body>
+</html>
+
+
+
